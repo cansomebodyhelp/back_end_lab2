@@ -1,12 +1,11 @@
-version: '3'
+version: '3.1'
 
 services:
-  app:
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
+  db:
+    image: postgres:latest
     environment:
-      PORT: "5000"
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
     ports:
-      - "5000:5000"
+      - "5432:5432"
