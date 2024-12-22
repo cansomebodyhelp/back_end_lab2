@@ -1,11 +1,41 @@
-version: '3.1'
+version: '3.8'
 
 services:
+
   db:
-    image: postgres:latest
+    image: postgres:13
+    container_name: back_end_lab2-db
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: mydatabase
     ports:
       - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - back_end_lab2_network
+
+
+  app:
+    build: .
+    container_name: back_end_lab2-app
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
+      - SECRET_KEY=my_secret_key
+      - DEBUG=True
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - back_end_lab2_network
+
+
+networks:
+  back_end_lab2_network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
